@@ -1,9 +1,41 @@
-## Welcome to the Planning and Learning Organisation
+## Planning and Learning
 
-This organisation provides a collection of pip-installable C++ libraries with Python bindings for tackeling various objectives in the automated planning and learning.
+Planning and Learning develops native C++ libraries with Python packages for
+automated planning, lifted reasoning, and learning-oriented tooling around
+planning tasks.
 
-The organisation currently consists of the following repositories:
+The projects are designed to work both as C++ libraries and as pip-installable
+Python packages. The Python packages also ship the native headers, shared
+libraries, and CMake package files needed by downstream C++/Python projects.
 
-- yggdrasil: the C++ dependency provider
-- loki: depends on yggdrasil. It is a C++ library for parsing and normalizing planning tasks and domains specified in the planning domain definition language (PDDL)
-- tyr: depends on yggdrasil and loki. It is a C++ library with Python bindings for implementing ground and lifted search algorithms on normalized planning tasks and domains.
+### Projects
+
+- **[yggdrasil](https://github.com/planning-and-learning/yggdrasil)** provides
+  the shared native dependency prefix used by the other projects. Its Python
+  distribution is published as `pyyggdrasil`.
+- **[loki](https://github.com/planning-and-learning/loki)** provides PDDL
+  parsing, normalization, and translation utilities. Its Python distribution is
+  published as `pypddl`.
+- **[tyr](https://github.com/planning-and-learning/tyr)** provides planning
+  data structures, ground and lifted successor generation, search algorithms,
+  and Python bindings. Its Python distribution is published as `pytyr`.
+
+### Installation
+
+The packages are layered, so installing a downstream package pulls in the native
+packages it needs:
+
+```console
+pip install pyyggdrasil
+pip install pypddl
+pip install pytyr
+```
+
+For CMake consumers, each package exposes a `native_prefix()` helper that points
+to the installed native prefix:
+
+```python
+import pytyr
+
+print(pytyr.native_prefix())
+```
