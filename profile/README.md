@@ -33,6 +33,7 @@ packages it needs:
 pip install pyyggdrasil
 pip install pypddl
 pip install pytyr
+pip install pyrunir
 ```
 
 For CMake consumers, each package exposes a `native_prefix()` helper that points
