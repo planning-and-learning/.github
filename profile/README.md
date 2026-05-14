@@ -19,7 +19,11 @@ libraries, and CMake package files needed by downstream C++/Python projects.
 - **[tyr](https://github.com/planning-and-learning/tyr)** provides planning
   data structures, ground and lifted successor generation, search algorithms,
   and Python bindings. Its Python distribution is published as `pytyr`.
-
+- **[runir](https://github.com/planning-and-learning/runir)** provides
+  representations for generalized planning, including task classes, state and
+  equivalence graphs, description-logic feature languages, and rule-based policy
+  tooling. Its Python distribution is published as `pyrunir`.
+  
 ### Installation
 
 The packages are layered, so installing a downstream package pulls in the native
