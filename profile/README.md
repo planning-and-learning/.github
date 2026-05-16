@@ -2,8 +2,9 @@
 
 Planning and Learning is an ecosystem of C++ libraries and Python packages for integrating learning with planning-based systems.
 
-The projects provide efficient C++ implementations, Python bindings, and pip-installable packages for downstream use. Currently, the ecosystem consists of four projects that build upon
-one another.
+The projects provide efficient C++ implementations, Python bindings, and
+pip-installable packages for downstream use. Currently, the ecosystem consists
+of four projects that build upon one another.
   
 ### Projects
 
@@ -86,13 +87,14 @@ Each Python package exposes a `native_prefix()` helper that points to the
 installed C++ headers, shared libraries, and CMake package configuration files.
 Downstream CMake projects can use these prefixes through `CMAKE_PREFIX_PATH`.
 
-For example, to consume `runir` from an installed `pyrunir` package:
+For example, to consume `runir` from an installed `pyrunir` package, include the
+native prefixes of `pyrunir` and its native package dependencies:
 
 ```console
 python -m pip install pyrunir
 
 cmake -S . -B build \
-  -DCMAKE_PREFIX_PATH="$(python -c 'import os, pyrunir, pyyggdrasil; print(os.pathsep.join(map(str, [pyrunir.native_prefix(), pyyggdrasil.native_prefix()])))')"
+  -DCMAKE_PREFIX_PATH="$(python -c 'import os, pyyggdrasil, pypddl, pytyr, pyrunir; print(os.pathsep.join(map(str, [pyyggdrasil.native_prefix(), pypddl.native_prefix(), pytyr.native_prefix(), pyrunir.native_prefix()])))')"
 cmake --build build
 ```
 
