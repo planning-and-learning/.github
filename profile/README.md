@@ -12,15 +12,15 @@ of four projects that build upon one another.
   shared third-party native dependencies used by the other projects. Its Python
   distribution is published as `pyyggdrasil`.
 - **[loki](https://github.com/planning-and-learning/loki)** provides PDDL
-  parsing, normalization, and translation utilities. Its Python distribution is
+  parsing, normalization, and translation utilities, and Python bindings. Its Python distribution is
   published as `pypddl`.
 - **[tyr](https://github.com/planning-and-learning/tyr)** provides planning
   data structures, ground and lifted successor generation, search algorithms,
   and Python bindings. Its Python distribution is published as `pytyr`.
 - **[runir](https://github.com/planning-and-learning/runir)** provides
   representations for generalized planning, including task classes, state and
-  equivalence graphs, description-logic feature languages, and rule-based policy
-  tooling. Its Python distribution is published as `pyrunir`.
+  equivalence graphs, description-logic feature languages, rule-based policy
+  tooling, and Python bindings. Its Python distribution is published as `pyrunir`.
   
 ### Installation
 
