@@ -43,7 +43,6 @@ planning-and-learning/
   loki/
   tyr/
   runir/
-  learning-general-policies/
   planning-benchmarks/
 ```
 
