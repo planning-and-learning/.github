@@ -104,6 +104,14 @@ def parse_pins(raw: str) -> dict[str, str]:
     return pins
 
 
+def read_project_version(root: Path) -> str | None:
+    pyproject = root / "pyproject.toml"
+    if not pyproject.is_file():
+        return None
+    match = re.search(r'(?m)^version\s*=\s*"([^"]+)"', pyproject.read_text())
+    return match.group(1) if match else None
+
+
 def stage(root: Path, version: str, pins: dict[str, str]) -> list[Path]:
     changed: list[Path] = []
     for path in iter_patchable_files(root):
@@ -135,6 +143,17 @@ def main() -> int:
         print(f"  patched {path.relative_to(root)}")
     if not changed:
         print("  (no files changed)")
+
+    # Fail fast if the project version was not actually applied, so a format
+    # change in pyproject.toml can never silently publish a wheel under the
+    # wrong (committed) version.
+    applied = read_project_version(root)
+    if applied is None:
+        print(f"could not read pyproject.toml version under {root}", file=sys.stderr)
+        return 1
+    if applied != version:
+        print(f"version not applied: pyproject.toml has {applied!r}, expected {version!r}", file=sys.stderr)
+        return 1
     return 0
 
 
