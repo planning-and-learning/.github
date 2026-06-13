@@ -80,6 +80,26 @@ cmake -S . -B build \
 cmake --build build
 ```
 
+### Building from Source
+
+Every package builds with a standard PEP 517 frontend. From a package checkout,
+build and install it into the active environment with:
+
+```console
+python -m pip install .
+```
+
+or produce a wheel with:
+
+```console
+uv build --wheel
+```
+
+The packages are layered, so when building from source install the chain
+bottom-up — `pyyggdrasil` → `pypddl` → `pytyr` → `pyrunir` — so that each
+package can resolve the native prefixes of the providers it depends on. Each
+repository README documents its package-specific build options and CMake flags.
+
 ### CMake Integration
 
 Each Python package exposes a `native_prefix()` helper that points to the
