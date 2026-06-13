@@ -1,0 +1,30 @@
+name: Stage TestPyPI version
+description: >-
+  Rewrite the project version and provider dependency pins in the working tree
+  for TestPyPI staging. Edits are applied in place to the checked-out source and
+  are never committed; the surrounding workflow builds the patched tree.
+inputs:
+  version:
+    description: Project version to stage (e.g. 999.0.3).
+    required: true
+  pins:
+    description: >-
+      Newline-separated provider pins of the form "package=version". Lines with
+      an empty version are ignored, so a workflow can forward optional inputs
+      unconditionally.
+    required: false
+    default: ""
+  working-directory:
+    description: Directory whose source tree is patched.
+    required: false
+    default: "."
+runs:
+  using: composite
+  steps:
+    - name: Apply staging version and pins
+      shell: bash
+      env:
+        STAGE_VERSION: ${{ inputs.version }}
+        STAGE_PINS: ${{ inputs.pins }}
+        STAGE_ROOT: ${{ inputs.working-directory }}
+      run: python3 "${{ github.action_path }}/stage_version.py"
