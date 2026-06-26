@@ -3,32 +3,42 @@
 Planning and Learning is an ecosystem of C++ libraries and Python packages for integrating learning with planning-based systems.
 
 The projects provide efficient C++ implementations, Python bindings, and
-pip-installable packages for downstream use. Currently, the ecosystem consists
-of four projects that build upon one another.
-  
+pip-installable packages for downstream use. The ecosystem consists of projects
+that build upon one another.
+
 ### Projects
 
 - **[yggdrasil](https://github.com/planning-and-learning/yggdrasil)** provides
-  shared third-party native dependencies used by the other projects. Its Python
-  distribution is published as `pyyggdrasil`.
+  shared third-party native dependencies used by the other projects.
+  Its Python distribution is published as `pyyggdrasil`.
 - **[loki](https://github.com/planning-and-learning/loki)** provides PDDL
-  parsing, normalization, and translation utilities, and Python bindings. Its Python distribution is
-  published as `pypddl`.
+  parsing, normalization, and translation utilities, and Python bindings.
+  Its Python distribution is published as `pypddl`.
 - **[tyr](https://github.com/planning-and-learning/tyr)** provides planning
   data structures, ground and lifted successor generation, search algorithms,
   and Python bindings. Its Python distribution is published as `pytyr`.
+- **[tyr-mcp](https://github.com/planning-and-learning/tyr-mcp)** provides MCP tools
+  for testing solvability, and benchmark sampling.
+  Its Python distribution is published as `pytyr-mcp`.
 - **[runir](https://github.com/planning-and-learning/runir)** provides
   representations for generalized planning, including task classes, state and
   equivalence graphs, description-logic feature languages, rule-based policy
-  tooling, and Python bindings. Its Python distribution is published as `pyrunir`.
-  
+  tooling, and Python bindings.
+  Its Python distribution is published as `pyrunir`.
+- **[runir-mcp](https://github.com/planning-and-learning/runir-mcp)** provides MCP tools
+  for testing reformatting, executing, and proving sketches, extended sketches, and unsolvability heuristics.
+  Its Python distribution is published as `pyrunir-mcp`.
+- **[planning-benchmarks](https://github.com/planning-and-learning/planning-benchmarks)**
+  provides classical and numeric benchmark suites for testing and profiling,
+  PDDL generators, and precomputed training, validation, and testing splits for learning.
+
 ### Installation
 
 The packages are layered, so installing a downstream package pulls in the native
 packages it needs:
 
 ```console
-pip install pyyggdrasil pypddl pytyr pyrunir
+pip install pyyggdrasil pypddl pytyr pytyr-mcp pyrunir pyrunir-mcp
 ```
 
 ### Local Development
@@ -42,7 +52,9 @@ planning-and-learning/
   yggdrasil/
   loki/
   tyr/
+  tyr-mcp/
   runir/
+  runir-mcp/
   planning-benchmarks/
 ```
 
