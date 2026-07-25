@@ -58,10 +58,34 @@ def replace_python_requirement(text: str, package: str, version: str, operator: 
 
 def replace_cmake_dependency(text: str, package: str, version: str) -> str:
     pattern = rf"(find_(?:package|dependency)\(\s*{re.escape(package)})(?P<body>[^)]*)\)"
+    variable_pattern = re.compile(pattern)
+    updated_variables: set[str] = set()
+
+    for match in variable_pattern.finditer(text):
+        variable = re.match(r"\s+\$\{([A-Za-z_][A-Za-z0-9_]*)\}", match.group("body"))
+        if not variable:
+            continue
+        name = variable.group(1)
+        text, count = re.subn(
+            rf"(set\(\s*{re.escape(name)}\s+)[^)\s]+",
+            rf"\g<1>{version}",
+            text,
+            count=1,
+        )
+        if count:
+            updated_variables.add(name)
 
     def replace(match: re.Match[str]) -> str:
         head = match.group(1)
         body = match.group("body")
+        if re.match(r"\s+@[A-Za-z_][A-Za-z0-9_]*@", body):
+            return match.group(0)
+        variable = re.match(r"(?P<prefix>\s+)\$\{(?P<name>[A-Za-z_][A-Za-z0-9_]*)\}", body)
+        if variable:
+            if variable.group("name") in updated_variables:
+                return match.group(0)
+            body = re.sub(r"(?P<prefix>\s+)\$\{[A-Za-z_][A-Za-z0-9_]*\}", rf"\g<prefix>{version}", body, count=1)
+            return f"{head}{body})"
         stripped = body.lstrip()
         leading = body[: len(body) - len(stripped)]
         version_pattern = r"(?P<prefix>\s+)[0-9][A-Za-z0-9.!+_-]*"
