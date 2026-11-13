@@ -8,8 +8,21 @@ that build upon one another.
 
 ### Projects
 
+- **[brokkr](https://github.com/planning-and-learning/brokkr)** provides the
+  build tooling for native C++ libraries shipped as Python wheels: CMake helpers
+  and a scikit-build-core backend.
+  Its Python distribution is published as `pybrokkr`.
+- **[urd](https://github.com/planning-and-learning/urd)** provides containers
+  described by what the data is, as headers and a CMake package.
+  Its Python distribution is published as `pyurd`.
+  The same repository publishes `pyurd-native`, the shared third-party native
+  dependencies of all projects as one prefix.
+- **[vefr](https://github.com/planning-and-learning/vefr)** provides graph
+  algorithms over urd's graphs: color refinement, Weisfeiler-Leman, canonical
+  forms by nauty, searches, and shortest paths, and Python bindings.
+  Its Python distribution is published as `pyvefr`.
 - **[yggdrasil](https://github.com/planning-and-learning/yggdrasil)** provides
-  shared third-party native dependencies used by the other projects.
+  shared data structures and a database engine used by the planning projects.
   Its Python distribution is published as `pyyggdrasil`.
 - **[loki](https://github.com/planning-and-learning/loki)** provides PDDL
   parsing, normalization, and translation utilities, and Python bindings.
@@ -17,20 +30,13 @@ that build upon one another.
 - **[tyr](https://github.com/planning-and-learning/tyr)** provides planning
   data structures, ground and lifted successor generation, search algorithms,
   and Python bindings. Its Python distribution is published as `pytyr`.
-- **[tyr-mcp](https://github.com/planning-and-learning/tyr-mcp)** provides MCP tools
-  for testing solvability, and benchmark sampling.
-  Its Python distribution is published as `pytyr-mcp`.
 - **[runir](https://github.com/planning-and-learning/runir)** provides
   representations for generalized planning, including task classes, state and
   equivalence graphs, description-logic feature languages, rule-based policy
   tooling, and Python bindings.
   Its Python distribution is published as `pyrunir`.
-- **[runir-mcp](https://github.com/planning-and-learning/runir-mcp)** provides MCP tools
-  for testing reformatting, executing, and proving sketches, extended sketches, and unsolvability heuristics.
-  Its Python distribution is published as `pyrunir-mcp`.
 - **[planning-benchmarks](https://github.com/planning-and-learning/planning-benchmarks)**
-  provides classical and numeric benchmark suites for testing and profiling,
-  PDDL generators, and precomputed training, validation, and testing splits for learning.
+  provides classical and numeric benchmark suites for testing and profiling, and PDDL generators.
 
 ### Installation
 
@@ -38,7 +44,7 @@ The packages are layered, so installing a downstream package pulls in the native
 packages it needs:
 
 ```console
-pip install pyyggdrasil pypddl pytyr pytyr-mcp pyrunir pyrunir-mcp
+pip install pybrokkr pyurd pyvefr pyyggdrasil pypddl pytyr pyrunir
 ```
 
 ### Local Development
@@ -49,12 +55,13 @@ other as sibling checkouts:
 
 ```text
 planning-and-learning/
+  brokkr/
+  urd/
+  vefr/
   yggdrasil/
   loki/
   tyr/
-  tyr-mcp/
   runir/
-  runir-mcp/
   planning-benchmarks/
 ```
 
@@ -85,10 +92,10 @@ environment, then pass their `native_prefix()` locations to CMake through
 For example, a project that consumes `runir` can configure CMake with:
 
 ```console
-python -m pip install ../yggdrasil ../loki ../tyr ../runir
+python -m pip install ../brokkr ../urd/python ../urd ../vefr ../yggdrasil ../loki ../tyr ../runir
 
 cmake -S . -B build \
-  -DCMAKE_PREFIX_PATH="$(python -c 'import os, pyyggdrasil, pypddl, pytyr, pyrunir; print(os.pathsep.join(map(str, [pyyggdrasil.native_prefix(), pypddl.native_prefix(), pytyr.native_prefix(), pyrunir.native_prefix()])))')"
+  -DCMAKE_PREFIX_PATH="$(python -c 'import os, pyurd_native, pyurd, pyvefr, pyyggdrasil, pypddl, pytyr, pyrunir; print(os.pathsep.join(str(package.native_prefix()) for package in (pyurd_native, pyurd, pyvefr, pyyggdrasil, pypddl, pytyr, pyrunir)))')"
 cmake --build build
 ```
 
@@ -108,9 +115,10 @@ uv build --wheel
 ```
 
 The packages are layered, so when building from source install the chain
-bottom-up — `pyyggdrasil` → `pypddl` → `pytyr` → `pyrunir` — so that each
-package can resolve the native prefixes of the providers it depends on. Each
-repository README documents its package-specific build options and CMake flags.
+bottom-up — `pybrokkr` → `pyurd-native` → `pyurd` → `pyvefr` → `pyyggdrasil` →
+`pypddl` → `pytyr` → `pyrunir` — so that each package can resolve the native
+prefixes of the providers it depends on. Each repository README documents its
+package-specific build options and CMake flags.
 
 ### CMake Integration
 
@@ -125,7 +133,7 @@ native prefixes of `pyrunir` and its native package dependencies:
 python -m pip install pyrunir
 
 cmake -S . -B build \
-  -DCMAKE_PREFIX_PATH="$(python -c 'import os, pyyggdrasil, pypddl, pytyr, pyrunir; print(os.pathsep.join(map(str, [pyyggdrasil.native_prefix(), pypddl.native_prefix(), pytyr.native_prefix(), pyrunir.native_prefix()])))')"
+  -DCMAKE_PREFIX_PATH="$(python -c 'import os, pyurd_native, pyurd, pyvefr, pyyggdrasil, pypddl, pytyr, pyrunir; print(os.pathsep.join(str(package.native_prefix()) for package in (pyurd_native, pyurd, pyvefr, pyyggdrasil, pypddl, pytyr, pyrunir)))')"
 cmake --build build
 ```
 
@@ -145,6 +153,8 @@ target_link_libraries(example PRIVATE runir::core)
 For package-specific CMake targets, use the corresponding package config:
 
 ```cmake
+find_package(urd CONFIG REQUIRED)
+find_package(vefr CONFIG REQUIRED)
 find_package(loki CONFIG REQUIRED)
 find_package(tyr CONFIG REQUIRED)
 find_package(runir CONFIG REQUIRED COMPONENTS core)
