@@ -22,7 +22,8 @@ that build upon one another.
   forms by nauty, searches, and shortest paths, and Python bindings.
   Its Python distribution is published as `pyvefr`.
 - **[yggdrasil](https://github.com/planning-and-learning/yggdrasil)** provides
-  shared data structures and a database engine used by the planning projects.
+  the shared foundation of the planning projects: repositories of symbols,
+  relations, and their rows, plus serialization, formatting, and diagnostics.
   Its Python distribution is published as `pyyggdrasil`.
 - **[loki](https://github.com/planning-and-learning/loki)** provides PDDL
   parsing, normalization, and translation utilities, and Python bindings.
